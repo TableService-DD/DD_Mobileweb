@@ -1,5 +1,9 @@
 import axios from "axios";
 import { BASE_URL } from ".";
+import { Menu } from "@/util/types";
+import path from "path";
+import fs from "fs";
+import { promisify } from "util";
 
 export interface Stock {
   store_code: string;
@@ -38,4 +42,9 @@ export async function addStocks(item: Stock): Promise<boolean> {
     console.error(error);
     return false;
   }
+}
+const readFile = promisify(fs.readFile);
+export async function tmpGetMenus(): Promise<Menu> {
+  const filePath = path.join(process.cwd(), "public", "data", "menu.json");
+  return readFile(filePath, "utf-8").then<Menu>(JSON.parse);
 }
